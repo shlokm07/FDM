@@ -1,57 +1,59 @@
 import React from 'react';
-import { ArrowDownToLine, Gauge, CheckCircle2, Timer } from 'lucide-react';
+import { ArrowDownToLine, Gauge, Timer, Library } from 'lucide-react';
 import type { DaemonStatus } from '../types';
 import { formatBytes, formatEta, formatSpeed } from '../lib/formatters';
 
 export function OverviewCards({ status }: { status: DaemonStatus }) {
   const cards = [
     {
-      label: 'Active Transfers',
+      label: 'Active Downloads',
       value: `${status.activeDownloads}`,
-      sub: `${status.queuedDownloads} queued • ${status.pausedDownloads} paused`,
-      icon: <ArrowDownToLine className="w-4 h-4 text-emerald-500" />,
+      meta: `${status.queuedDownloads} queued • ${status.pausedDownloads} paused`,
+      icon: <ArrowDownToLine className="w-4 h-4 text-[var(--accent-primary)]" />,
     },
     {
-      label: 'Download Speed',
+      label: 'Current Speed',
       value: formatSpeed(status.totalSpeedBytesPerSec),
-      sub: `${status.totalConnections} active socket threads`,
-      icon: <Gauge className="w-4 h-4 text-sky-500" />,
+      meta: `${status.totalConnections} active socket threads`,
+      icon: <Gauge className="w-4 h-4 text-[var(--semantic-info)]" />,
     },
     {
-      label: 'Estimated Time Remaining',
+      label: 'Overall ETA',
       value:
         status.activeDownloads > 0
           ? formatEta(status.overallEtaSeconds, 'downloading')
           : 'Idle',
-      sub: status.activeDownloads > 0 ? 'Queue completion estimate' : 'No active transfers',
-      icon: <Timer className="w-4 h-4 text-amber-500" />,
+      meta: status.activeDownloads > 0 ? 'Estimated time remaining' : 'All transfers idle',
+      icon: <Timer className="w-4 h-4 text-[var(--semantic-warning)]" />,
     },
     {
-      label: 'Downloaded Library',
-      value: `${status.completedDownloads} files`,
-      sub: `${formatBytes(status.totalDownloadedBytes)} total stored`,
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+      label: 'Library Count',
+      value: `${status.completedDownloads}`,
+      meta: `${formatBytes(status.totalDownloadedBytes)} total downloaded`,
+      icon: <Library className="w-4 h-4 text-[var(--semantic-success)]" />,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
       {cards.map((c) => (
         <div
           key={c.label}
-          className="rounded-xl border border-[var(--border-color)] bg-[var(--card-bg)] p-3.5 shadow-xs transition-colors hover:border-[var(--accent)]/40"
+          style={{ boxShadow: 'var(--shadow-card)' }}
+          className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-primary)] px-4 py-3.5 flex items-center justify-between gap-3"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-medium text-[var(--text-secondary)]">{c.label}</span>
-            <div className="w-7 h-7 rounded-lg bg-[var(--subtle-bg)] flex items-center justify-center">{c.icon}</div>
+          <div className="min-w-0">
+            <div className="text-[12px] font-medium text-[var(--text-secondary)] truncate">{c.label}</div>
+            <div className="mt-1 text-[20px] font-semibold tracking-tight text-[var(--text-primary)] tabular-nums leading-none">
+              {c.value}
+            </div>
+            <div className="mt-1.5 text-[11.5px] text-[var(--text-muted)] truncate tabular-nums">{c.meta}</div>
           </div>
-          <div className="mt-2 text-lg font-semibold tracking-tight text-[var(--text-primary)] tabular-nums">
-            {c.value}
+          <div className="w-9 h-9 rounded-lg bg-[var(--surface-secondary)] flex items-center justify-center shrink-0">
+            {c.icon}
           </div>
-          <div className="mt-0.5 text-[11px] text-[var(--text-muted)] truncate">{c.sub}</div>
         </div>
       ))}
     </div>
   );
 }
-

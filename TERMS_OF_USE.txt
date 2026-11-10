@@ -1,0 +1,30 @@
+FDM - FLUENT DOWNLOAD MANAGER
+END-USER LICENSE AGREEMENT (EULA) AND TERMS OF USE
+Version 3.0
+
+PLEASE READ THIS USER AGREEMENT AND TERMS OF USE CAREFULLY BEFORE INSTALLING OR USING FDM - FLUENT DOWNLOAD MANAGER ("THE SOFTWARE"). BY INSTALLING OR USING THE SOFTWARE, YOU AGREE TO BE BOUND BY THESE TERMS.
+
+1. GRANT OF LICENSE
+FDM - Fluent Download Manager is provided to you for personal and commercial desktop download management use on Windows systems. You may install, run, and use the Software in accordance with these Terms.
+
+2. LAWFUL USE & COPYRIGHT COMPLIANCE
+- You are solely responsible for all URLs, files, and media downloaded using the Software.
+- You agree to use the Software strictly for content you own, have permission to download, or that is legally available for downloading under applicable laws and website terms of service.
+- The Software does NOT circumvent, crack, or bypass DRM (Digital Rights Management), hardware encryption, paywalls, or authentication access controls.
+
+3. PRIVACY & LOCAL-ONLY OPERATION
+- FDM - Fluent Download Manager runs completely locally on your computer (`127.0.0.1`).
+- The Software does NOT collect personal telemetry, browsing history, usage analytics, or transmit download records to external third-party servers.
+- Download history, settings cache, and browser integration keys are stored strictly locally on your machine under your Windows user profile (`%LOCALAPPDATA%`).
+
+4. BROWSER INTEGRATION (OPTIONAL)
+- Browser integration via Chrome/Edge Native Messaging is optional and installed only with your explicit consent during setup.
+- Media sniffing and download capture trigger only on supported unencrypted streams and explicit user action.
+
+5. UNINSTALLATION
+- You may uninstall the Software at any time via Windows Settings ("Installed Apps"), the Start Menu ("Uninstall FDM"), or by running `Uninstall.exe` inside the installation directory.
+- Uninstalling removes application binaries, shortcuts, and registry registrations while leaving your downloaded files in your Downloads folder untouched.
+
+6. DISCLAIMER OF WARRANTIES & LIMITATION OF LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OR INABILITY TO USE THE SOFTWARE.
+

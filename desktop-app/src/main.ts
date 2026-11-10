@@ -68,9 +68,9 @@ async function main() {
 
   const memUsage = (process.memoryUsage().rss / 1024 / 1024).toFixed(1);
   console.log('====================================================');
-  console.log(`  REA-IDM — Ultra-Lightweight Download Manager`);
+  console.log(`  FDM - Fluent Download Manager`);
   console.log(`  Dashboard:  http://127.0.0.1:${port}`);
-  console.log(`  Memory:     ${memUsage} MB RAM (vs 200MB+ in IDM/Electron)`);
+  console.log(`  Memory:     ${memUsage} MB RAM`);
   console.log(`  Clipboard:  Event-driven link sniffer active`);
   console.log(`  Status:     Online & Ready`);
   console.log('====================================================');
@@ -81,7 +81,7 @@ async function main() {
   }
 
   const shutdown = async () => {
-    console.log('\n[REA-IDM] Shutting down cleanly...');
+    console.log('\n[FDM] Shutting down cleanly...');
     ClipboardListener.stop();
     await daemon.stop();
     process.exit(0);
@@ -92,6 +92,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(`[REA-IDM] Fatal Error: ${err.message}`);
+  console.error(`[FDM] Fatal Error: ${err.message}`);
   process.exit(1);
 });

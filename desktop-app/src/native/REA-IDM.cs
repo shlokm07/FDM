@@ -178,12 +178,12 @@ namespace ReaIdm
 
         public MainWindow(bool startMinimized)
         {
-            this.Text = "REA-IDM — Download Manager";
+            this.Text = "FDM - Fluent Download Manager";
             this.Size = new Size(1240, 780);
             this.MinimumSize = new Size(920, 600);
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.BackColor = Color.FromArgb(17, 19, 23);
-            this.Icon = SystemIcons.Application;
+            this.BackColor = Color.FromArgb(17, 24, 39);
+            try { this.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath) ?? SystemIcons.Application; } catch { this.Icon = SystemIcons.Application; }
 
             InitTray();
             InitWebView();
@@ -208,11 +208,11 @@ namespace ReaIdm
         {
             webView = new WebView2();
             webView.Dock = DockStyle.Fill;
-            webView.DefaultBackgroundColor = Color.FromArgb(17, 19, 23);
+            webView.DefaultBackgroundColor = Color.FromArgb(17, 24, 39);
 
             string userDataDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"REA-IDM\WebView2Data"
+                @"FDM\WebView2Data"
             );
             Directory.CreateDirectory(userDataDir);
 
@@ -356,17 +356,17 @@ namespace ReaIdm
         private void InitTray()
         {
             trayMenu = new ContextMenuStrip();
-            trayMenu.Items.Add("Open REA-IDM", null, (s, e) => ShowWindow());
+            trayMenu.Items.Add("Open FDM - Fluent Download Manager", null, (s, e) => ShowWindow());
             trayMenu.Items.Add("Open Downloads Folder", null, (s, e) =>
             {
                 try { ApiClient.PostJson(BASE_API + "/downloads/open-dir", "{}"); } catch { }
             });
             trayMenu.Items.Add("-");
-            trayMenu.Items.Add("Exit REA-IDM", null, (s, e) => ExitApp());
+            trayMenu.Items.Add("Exit FDM", null, (s, e) => ExitApp());
 
             trayIcon = new NotifyIcon();
-            trayIcon.Text = "REA-IDM — Download Manager";
-            trayIcon.Icon = SystemIcons.Application;
+            trayIcon.Text = "FDM - Fluent Download Manager";
+            trayIcon.Icon = this.Icon ?? SystemIcons.Application;
             trayIcon.ContextMenuStrip = trayMenu;
             trayIcon.Visible = true;
             trayIcon.DoubleClick += (s, e) => ShowWindow();
@@ -400,7 +400,7 @@ namespace ReaIdm
             if (this.WindowState == FormWindowState.Minimized)
             {
                 this.Hide();
-                trayIcon.ShowBalloonTip(1200, "REA-IDM Active", "Downloads continue in the system tray.", ToolTipIcon.Info);
+                trayIcon.ShowBalloonTip(1200, "FDM - Fluent Download Manager", "Downloads continue in the system tray.", ToolTipIcon.Info);
             }
         }
 
@@ -410,7 +410,7 @@ namespace ReaIdm
             {
                 e.Cancel = true;
                 this.Hide();
-                trayIcon.ShowBalloonTip(1200, "REA-IDM Minimized", "REA-IDM is running in the system tray.", ToolTipIcon.Info);
+                trayIcon.ShowBalloonTip(1200, "FDM Minimized", "FDM is running in the system tray.", ToolTipIcon.Info);
             }
         }
 

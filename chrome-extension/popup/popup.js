@@ -46,12 +46,12 @@ document.querySelectorAll('.chip').forEach((chip) => {
   });
 });
 
-// Open or focus native Windows REA-IDM app
+// Open or focus native Windows FDM - Fluent Download Manager app
 openAppBtn.addEventListener('click', () => {
   openAppBtn.textContent = 'Opening...';
   chrome.runtime.sendMessage({ type: 'OPEN_DESKTOP_APP' }, () => {
     setTimeout(() => {
-      openAppBtn.textContent = 'Open App';
+      openAppBtn.textContent = 'Open FDM';
     }, 1000);
   });
 });
@@ -215,14 +215,14 @@ async function refreshDaemonState() {
   } catch {
     statusBadge.textContent = 'Offline';
     statusBadge.className = 'badge offline';
-    speedSummary.textContent = 'Desktop engine offline — Click Open App';
-    downloadsListEl.innerHTML = `<div class="empty-state">REA-IDM Desktop App is not running.<br>Click <strong>Open App</strong> at the top-right to start it.</div>`;
+    speedSummary.textContent = 'Desktop engine offline — Click Open FDM';
+    downloadsListEl.innerHTML = `<div class="empty-state">FDM - Fluent Download Manager is not running.<br>Click <strong>Open FDM</strong> at the top-right to start it.</div>`;
   }
 }
 
 function renderDownloadsList() {
   if (!Array.isArray(daemonItems) || daemonItems.length === 0) {
-    downloadsListEl.innerHTML = `<div class="empty-state">No downloads in REA-IDM yet.</div>`;
+    downloadsListEl.innerHTML = `<div class="empty-state">No downloads in FDM yet.</div>`;
     return;
   }
 

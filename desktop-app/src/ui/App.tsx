@@ -37,6 +37,10 @@ export function App() {
     return saved === 'light' ? 'light' : 'dark';
   });
 
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem('rea_idm_sidebar_collapsed') === 'true';
+  });
+
   const [section, setSection] = useState<NavSection>('dashboard');
   const [activeCategory, setActiveCategory] = useState<string>('Video');
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,6 +82,10 @@ export function App() {
     localStorage.setItem('rea_idm_theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    localStorage.setItem('rea_idm_sidebar_collapsed', String(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -106,7 +114,6 @@ export function App() {
         const stData: DaemonStatus = await stRes.json();
         const dlData: DownloadItem[] = await dlRes.json();
 
-        // Detect completion or failure transitions for notification feed
         if (firstPollDoneRef.current) {
           const newNotifs: AppNotification[] = [];
           dlData.forEach((d) => {
@@ -203,7 +210,10 @@ export function App() {
   }, [downloads, section, activeCategory, searchQuery]);
 
   const activeItems = useMemo(
-    () => downloads.filter((d) => d.state.status === 'downloading' || d.state.status === 'paused' || d.state.status === 'idle'),
+    () =>
+      downloads.filter(
+        (d) => d.state.status === 'downloading' || d.state.status === 'paused' || d.state.status === 'idle'
+      ),
     [downloads]
   );
 
@@ -217,7 +227,7 @@ export function App() {
     [downloads, selectedId]
   );
 
-  const postApi = async (endpoint: string, body: Record<string, any> = {}) => {
+  const postApi = async (endpoint: string, body: Record<string, unknown> = {}) => {
     try {
       await fetch(`/api/${endpoint}`, {
         method: 'POST',
@@ -239,7 +249,7 @@ export function App() {
     setConfirmState({
       open: true,
       title: 'Delete File Permanently?',
-      message: `This will remove "${target?.filename || 'this file'}" from your library and permanently delete it from disk.`,
+      message: `This removes "${target?.filename || 'this item'}" from FDM and permanently deletes it from disk.`,
       confirmLabel: 'Delete File',
       danger: true,
       onConfirm: () => {
@@ -253,7 +263,7 @@ export function App() {
     setConfirmState({
       open: true,
       title: 'Clear Completed List?',
-      message: 'This clears completed entries from your download list. Saved files on disk will NOT be deleted.',
+      message: 'This clears finished entries from the FDM list. Downloaded files on disk are kept.',
       confirmLabel: 'Clear List',
       danger: false,
       onConfirm: () => {
@@ -266,16 +276,16 @@ export function App() {
   const sectionTitleMap: Record<NavSection, string> = {
     dashboard: 'Dashboard',
     all: 'All Downloads',
-    downloading: 'Active Downloads',
+    downloading: 'Downloading',
     queued: 'Queued & Paused',
-    completed: 'Completed Downloads',
+    completed: 'Completed',
     failed: 'Failed Downloads',
     categories: `${activeCategory} Downloads`,
     settings: 'Settings',
   };
 
   return (
-    <div className="h-screen w-screen flex bg-[var(--app-bg)] text-[var(--text-primary)] overflow-hidden">
+    <div className="h-screen w-screen flex bg-[var(--app-bg)] text-[var(--text-primary)] overflow-hidden transition-colors duration-200">
       {/* Left Navigation Sidebar */}
       <Sidebar
         activeSection={section}
@@ -286,6 +296,8 @@ export function App() {
         counts={counts}
         categoryCounts={counts.categoryCounts}
         downloadDir={status.settings.downloadDir}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
       />
 
       {/* Main Column */}
@@ -305,8 +317,8 @@ export function App() {
           searchInputRef={searchInputRef}
         />
 
-        {/* Scrollable Content Region */}
-        <main className="flex-1 overflow-y-auto p-5 space-y-5">
+        {/* Scrollable Content Workspace */}
+        <main className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
           {section === 'settings' ? (
             <SettingsPanel
               settings={status.settings}
@@ -320,8 +332,8 @@ export function App() {
                 setNotifications((n) => [
                   {
                     id: `scan-${Date.now()}`,
-                    title: 'Library Synced',
-                    message: 'Downloads folder scanned for existing files.',
+                    title: 'Folder Synced',
+                    message: 'Downloads directory scanned for local files.',
                     type: 'info',
                     timestamp: Date.now(),
                     read: false,
@@ -332,24 +344,29 @@ export function App() {
             />
           ) : section === 'dashboard' && !searchQuery ? (
             <>
-              <div className="flex items-center justify-between">
+              {/* 1. Page Heading */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-base font-semibold text-[var(--text-primary)]">Overview</h1>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    Real-time transfer metrics, ETA estimates, and downloaded files.
+                  <h1 className="text-[24px] font-semibold tracking-tight text-[var(--text-primary)] leading-tight">
+                    Dashboard
+                  </h1>
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                    Manage active transfers, speed limits, and your downloaded library.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => postApi('downloads/scan')}
-                    className="h-8 px-3 rounded-lg border border-[var(--border-color)] bg-[var(--surface-bg)] hover:bg-[var(--hover-bg)] text-xs font-medium text-[var(--text-primary)] flex items-center gap-1.5 cursor-pointer"
+                    className="h-8.5 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] text-[12.5px] font-medium text-[var(--text-primary)] flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" /> Sync Folder
                   </button>
                   {counts.completed > 0 && (
                     <button
+                      type="button"
                       onClick={handleClearCompleted}
-                      className="h-8 px-3 rounded-lg border border-[var(--border-color)] bg-[var(--surface-bg)] hover:bg-[var(--hover-bg)] text-xs font-medium text-[var(--text-secondary)] flex items-center gap-1.5 cursor-pointer"
+                      className="h-8.5 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] text-[12.5px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" /> Clear Completed
                     </button>
@@ -357,27 +374,37 @@ export function App() {
                 </div>
               </div>
 
+              {/* 2. Compact Overview Statistics */}
               <OverviewCards status={status} />
 
-              {/* Active & Queued Section */}
-              <section className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
-                    Active &amp; Queued ({activeItems.length})
+              {/* 3. Active & Queued Downloads */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-[16px] font-semibold text-[var(--text-primary)]">
+                    Active &amp; Queued{' '}
+                    <span className="text-[13px] font-normal text-[var(--text-muted)] tabular-nums">
+                      ({activeItems.length})
+                    </span>
                   </h2>
                   {activeItems.length > 0 && (
-                    <div className="flex gap-1.5">
+                    <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => activeItems.forEach((i) => i.state.status === 'paused' && postApi(`downloads/${i.id}/resume`))}
-                        className="text-[11px] px-2 py-1 rounded-md border border-[var(--border-color)] bg-[var(--surface-bg)] hover:bg-[var(--hover-bg)] flex items-center gap-1 cursor-pointer"
+                        type="button"
+                        onClick={() =>
+                          activeItems.forEach((i) => i.state.status === 'paused' && postApi(`downloads/${i.id}/resume`))
+                        }
+                        className="h-7.5 px-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] text-[12px] font-medium text-[var(--text-primary)] flex items-center gap-1.5 cursor-pointer"
                       >
-                        <Play className="w-3 h-3 text-emerald-500" /> Resume All
+                        <Play className="w-3 h-3 text-[var(--accent-primary)]" /> Resume All
                       </button>
                       <button
-                        onClick={() => activeItems.forEach((i) => i.state.status === 'downloading' && postApi(`downloads/${i.id}/pause`))}
-                        className="text-[11px] px-2 py-1 rounded-md border border-[var(--border-color)] bg-[var(--surface-bg)] hover:bg-[var(--hover-bg)] flex items-center gap-1 cursor-pointer"
+                        type="button"
+                        onClick={() =>
+                          activeItems.forEach((i) => i.state.status === 'downloading' && postApi(`downloads/${i.id}/pause`))
+                        }
+                        className="h-7.5 px-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] text-[12px] font-medium text-[var(--text-primary)] flex items-center gap-1.5 cursor-pointer"
                       >
-                        <Pause className="w-3 h-3 text-amber-500" /> Pause All
+                        <Pause className="w-3 h-3 text-[var(--semantic-warning)]" /> Pause All
                       </button>
                     </div>
                   )}
@@ -386,7 +413,7 @@ export function App() {
                 {activeItems.length === 0 ? (
                   <EmptyState
                     title="No Active Transfers"
-                    description="Click Add Download or start a video/file capture from the Chrome Extension to watch multi-threaded speed and ETA here."
+                    description="Click Add Download or trigger a capture from Chrome to track live multi-threaded speed and ETA."
                     actionLabel="Add New Download"
                     onAction={() => setAddModalOpen(true)}
                   />
@@ -405,26 +432,30 @@ export function App() {
                 )}
               </section>
 
-              {/* Recent Completed Library Section */}
-              <section className="space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-secondary)]">
-                    Recently Downloaded ({counts.completed})
+              {/* 4. Recent Completed Activity */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-[16px] font-semibold text-[var(--text-primary)]">
+                    Recent Completed{' '}
+                    <span className="text-[13px] font-normal text-[var(--text-muted)] tabular-nums">
+                      ({counts.completed})
+                    </span>
                   </h2>
                   {counts.completed > 8 && (
                     <button
+                      type="button"
                       onClick={() => setSection('completed')}
-                      className="text-xs font-medium text-[var(--accent)] hover:underline cursor-pointer"
+                      className="text-[12.5px] font-medium text-[var(--accent-primary)] hover:underline cursor-pointer"
                     >
-                      View All Completed →
+                      View all completed →
                     </button>
                   )}
                 </div>
 
                 {recentCompleted.length === 0 ? (
                   <EmptyState
-                    title="No Downloaded Files Yet"
-                    description="Finished files from your downloads folder appear here for quick opening."
+                    title="No Completed Files Yet"
+                    description="Completed downloads in your destination folder appear here for quick access."
                   />
                 ) : (
                   <DownloadCardList
@@ -442,21 +473,22 @@ export function App() {
               </section>
             </>
           ) : (
-            <section className="space-y-3">
-              <div className="flex items-center justify-between">
+            <section className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h1 className="text-base font-semibold text-[var(--text-primary)]">
-                    {searchQuery ? `Search Results for "${searchQuery}"` : sectionTitleMap[section]}
+                  <h1 className="text-[24px] font-semibold tracking-tight text-[var(--text-primary)] leading-tight">
+                    {searchQuery ? `Search: "${searchQuery}"` : sectionTitleMap[section]}
                   </h1>
-                  <p className="text-xs text-[var(--text-secondary)]">
-                    Showing {filteredDownloads.length} {filteredDownloads.length === 1 ? 'item' : 'items'}
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5 tabular-nums">
+                    {filteredDownloads.length} {filteredDownloads.length === 1 ? 'item' : 'items'}
                   </p>
                 </div>
 
                 {section === 'completed' && counts.completed > 0 && (
                   <button
+                    type="button"
                     onClick={handleClearCompleted}
-                    className="h-8 px-3 rounded-lg border border-[var(--border-color)] bg-[var(--surface-bg)] hover:bg-[var(--hover-bg)] text-xs font-medium text-[var(--text-secondary)] flex items-center gap-1.5 cursor-pointer"
+                    className="h-8.5 px-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-primary)] hover:bg-[var(--surface-secondary)] text-[12.5px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" /> Clear Completed List
                   </button>
@@ -465,11 +497,11 @@ export function App() {
 
               {filteredDownloads.length === 0 ? (
                 <EmptyState
-                  title="Nothing Here"
+                  title="No Downloads Found"
                   description={
                     searchQuery
-                      ? 'No downloads match your search query. Try another filename or category.'
-                      : 'No downloads currently match this view.'
+                      ? 'No items matched your search query. Try another filename, folder, or category.'
+                      : 'There are currently no downloads in this view.'
                   }
                   actionLabel={searchQuery ? 'Clear Search' : 'Add Download'}
                   onAction={() => (searchQuery ? setSearchQuery('') : setAddModalOpen(true))}
@@ -491,11 +523,11 @@ export function App() {
           )}
         </main>
 
-        {/* Bottom Live Speed Graph & Connections Bar */}
+        {/* Collapsible Bottom Network Monitoring Panel */}
         <NetworkFooter status={status} selectedItem={selectedItem} />
       </div>
 
-      {/* Modals */}
+      {/* Add Download Modal */}
       <AddDownloadModal
         open={addModalOpen}
         defaultDir={status.settings.downloadDir}
@@ -503,6 +535,7 @@ export function App() {
         onStartDownload={(payload) => postApi('downloads/add', payload)}
       />
 
+      {/* Confirmation Dialog */}
       <ConfirmDialog
         open={confirmState.open}
         title={confirmState.title}
@@ -515,5 +548,5 @@ export function App() {
     </div>
   );
 }
-export default App;
 
+export default App;

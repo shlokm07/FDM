@@ -338,7 +338,7 @@
           showPageToast(`Downloading: ${res.filename || stream.label}`, true);
         } else {
           if (textSpan) textSpan.textContent = 'Offline';
-          showPageToast('REA-IDM Desktop App is offline. Open extension to launch.', false);
+          showPageToast('FDM - Fluent Download Manager is offline. Open extension to launch.', false);
         }
         setTimeout(() => {
           if (textSpan) textSpan.textContent = 'Download Video';
@@ -360,7 +360,7 @@
       <div class="rea-idm-modal">
         <div class="rea-idm-modal-head">
           <div>
-            <h3>REA-IDM Page Media & Link Grabber</h3>
+            <h3>FDM - Fluent Download Manager — Grab Media</h3>
             <p>${allItems.length} downloadable resources found on this page</p>
           </div>
           <button type="button" class="rea-idm-modal-close">✕</button>
@@ -459,9 +459,9 @@
 
       chrome.runtime.sendMessage({ type: 'BATCH_DOWNLOAD', items: batch }, (res) => {
         if (res && res.success) {
-          showPageToast(`Queued ${batch.length} downloads in REA-IDM!`, true);
+          showPageToast(`Queued ${batch.length} downloads in FDM!`, true);
         } else {
-          showPageToast('REA-IDM Desktop App is offline.', false);
+          showPageToast('FDM - Fluent Download Manager is offline.', false);
         }
         overlay.remove();
       });

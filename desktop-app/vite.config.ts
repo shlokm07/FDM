@@ -9,6 +9,7 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, 'bin/ui'),
     emptyOutDir: true,
+    assetsInlineLimit: 65536,
     rollupOptions: {
       output: {
         entryFileNames: 'app.js',
@@ -23,4 +24,3 @@ export default defineConfig({
     },
   },
 });
-

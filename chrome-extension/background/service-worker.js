@@ -21,13 +21,13 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'rea-download-link',
-      title: 'Download with REA-IDM',
+      title: 'Download with FDM - Fluent Download Manager',
       contexts: ['link', 'image', 'video', 'audio']
     });
 
     chrome.contextMenus.create({
       id: 'rea-download-page-media',
-      title: 'REA-IDM: Grab All Media & Links on Page',
+      title: 'FDM: Grab All Media & Links on Page',
       contexts: ['page']
     });
   });
@@ -55,8 +55,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         type: 'REA_TOAST',
         success: result.success,
         message: result.success
-          ? `Sent to REA-IDM: ${result.filename || 'Download started'}`
-          : 'REA-IDM Desktop App is offline. Please open REA-IDM.'
+          ? `Sent to FDM: ${result.filename || 'Download started'}`
+          : 'FDM - Fluent Download Manager is offline. Please open FDM.'
       }).catch(() => {});
     }
   }
@@ -220,7 +220,7 @@ function getTabMediaList(tabId) {
 function updateBadgeForTab(tabId, count) {
   try {
     chrome.action.setBadgeText({ text: count > 0 ? String(count) : '', tabId });
-    chrome.action.setBadgeBackgroundColor({ color: '#10B981', tabId });
+    chrome.action.setBadgeBackgroundColor({ color: '#4F46E5', tabId });
   } catch {
     // Ignore closed tabs
   }
@@ -336,7 +336,7 @@ async function openDesktopApp() {
 
 function flashActionBadge(text) {
   chrome.action.setBadgeText({ text });
-  chrome.action.setBadgeBackgroundColor({ color: '#10B981' });
+  chrome.action.setBadgeBackgroundColor({ color: '#4F46E5' });
   setTimeout(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]) {

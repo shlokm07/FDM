@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "REA-IDM — Smart Download & Media Suite",
-  "version": "2.0.0",
-  "description": "Ultra-lightweight high-speed download manager, interactive media sniffer, and batch link grabber for REA-IDM.",
+  "name": "FDM - Fluent Download Manager",
+  "version": "3.0.0",
+  "description": "High-speed download manager, interactive media sniffer, and batch link grabber for FDM - Fluent Download Manager.",
   "permissions": [
     "downloads",
     "contextMenus",

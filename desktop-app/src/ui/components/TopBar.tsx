@@ -57,111 +57,135 @@ export function TopBar({
   }, []);
 
   return (
-    <header className="h-14 shrink-0 px-5 flex items-center justify-between gap-4 border-b border-[var(--border-color)] bg-[var(--surface-bg)]">
-      {/* Search Downloads */}
-      <div className="relative flex-1 max-w-md">
+    <header className="h-14 shrink-0 px-5 flex items-center justify-between gap-3 border-b border-[var(--border-subtle)] bg-[var(--surface-primary)]">
+      {/* Global Search Input */}
+      <div className="relative flex-1 max-w-md min-w-[180px]">
         <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           ref={searchInputRef}
           type="text"
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search downloads, categories, or paths... (Ctrl+F)"
-          className="w-full h-9 pl-9 pr-8 rounded-lg border border-[var(--border-color)] bg-[var(--subtle-bg)] text-xs text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+          aria-label="Search downloads"
+          placeholder="Search downloads, categories, or paths..."
+          className="w-full h-9 pl-9 pr-14 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] text-[13px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:bg-[var(--surface-primary)] transition-colors"
         />
-        {searchQuery && (
+        {searchQuery ? (
           <button
+            type="button"
             onClick={() => onSearchChange('')}
             aria-label="Clear search"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+            title="Clear search"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        ) : (
+          <kbd className="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded text-[10px] font-medium text-[var(--text-muted)] bg-[var(--surface-primary)] border border-[var(--border-subtle)] pointer-events-none">
+            Ctrl+F
+          </kbd>
         )}
       </div>
 
       {/* Right Toolbar Actions */}
-      <div className="flex items-center gap-2">
-        {/* Global Speed Limiter */}
-        <div className="hidden sm:flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-[var(--border-color)] bg-[var(--subtle-bg)]">
-          <Gauge className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+      <div className="flex items-center gap-2 shrink-0">
+        {/* Speed Limit Selector */}
+        <div
+          title="Global bandwidth limit"
+          className="hidden md:flex items-center gap-1.5 h-9 px-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] hover:border-[var(--text-muted)]/50 transition-colors"
+        >
+          <Gauge className="w-3.5 h-3.5 text-[var(--text-secondary)] shrink-0" />
           <select
             aria-label="Global speed limit"
             value={speedLimit}
             onChange={(e) => onSpeedLimitChange(parseInt(e.target.value, 10))}
-            className="bg-transparent text-xs font-medium text-[var(--text-primary)] focus:outline-none cursor-pointer"
+            className="bg-transparent text-[12.5px] font-medium text-[var(--text-primary)] focus:outline-none cursor-pointer"
           >
-            <option value={0} className="bg-[var(--surface-bg)]">Unlimited Speed</option>
-            <option value={524288} className="bg-[var(--surface-bg)]">Limit 512 KB/s</option>
-            <option value={1048576} className="bg-[var(--surface-bg)]">Limit 1 MB/s</option>
-            <option value={5242880} className="bg-[var(--surface-bg)]">Limit 5 MB/s</option>
-            <option value={10485760} className="bg-[var(--surface-bg)]">Limit 10 MB/s</option>
+            <option value={0} className="bg-[var(--surface-primary)]">Unlimited</option>
+            <option value={524288} className="bg-[var(--surface-primary)]">512 KB/s</option>
+            <option value={1048576} className="bg-[var(--surface-primary)]">1 MB/s</option>
+            <option value={5242880} className="bg-[var(--surface-primary)]">5 MB/s</option>
+            <option value={10485760} className="bg-[var(--surface-primary)]">10 MB/s</option>
           </select>
         </div>
 
-        {/* Add New Download CTA */}
+        {/* Primary Add Download CTA */}
         <button
+          type="button"
           onClick={onOpenAddModal}
-          className="h-9 px-3.5 rounded-lg bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+          title="Add New Download (Ctrl+N)"
+          className="h-9 px-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-[13px] font-medium flex items-center gap-1.5 transition-colors cursor-pointer active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
         >
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 shrink-0" />
           <span>Add Download</span>
         </button>
 
-        {/* Notifications Popover */}
+        {/* Notifications Bell & Popover */}
         <div className="relative" ref={popoverRef}>
           <button
+            type="button"
             onClick={() => {
               const next = !notifOpen;
               setNotifOpen(next);
               if (next && unreadCount > 0) onMarkAllRead();
             }}
             aria-label="Notifications"
-            className="h-9 w-9 rounded-lg border border-[var(--border-color)] bg-[var(--subtle-bg)] hover:bg-[var(--hover-bg)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors relative cursor-pointer"
+            title="Notifications"
+            className="h-9 w-9 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-hover)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
           >
             <Bell className="w-4 h-4" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[var(--accent)] text-white text-[10px] font-bold flex items-center justify-center tabular-nums">
+              <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-indigo-600 text-white text-[10px] font-semibold flex items-center justify-center tabular-nums">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
 
           {notifOpen && (
-            <div className="absolute right-0 mt-2 w-80 rounded-xl border border-[var(--border-color)] bg-[var(--surface-bg)] shadow-2xl z-40 overflow-hidden">
-              <div className="px-3.5 py-2.5 border-b border-[var(--border-color)] flex items-center justify-between">
-                <span className="text-xs font-semibold text-[var(--text-primary)]">Notifications</span>
+            <div
+              style={{ boxShadow: 'var(--shadow-popover)' }}
+              className="absolute right-0 mt-2 w-80 rounded-xl border border-[var(--border-subtle)] bg-[var(--surface-primary)] z-40 overflow-hidden animate-dialog-in"
+            >
+              <div className="px-4 py-2.5 border-b border-[var(--border-subtle)] flex items-center justify-between">
+                <span className="text-[13px] font-semibold text-[var(--text-primary)]">Notifications</span>
                 {notifications.length > 0 && (
                   <button
+                    type="button"
                     onClick={onClearNotifications}
-                    className="text-[11px] text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center gap-1 cursor-pointer"
+                    className="text-[11.5px] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center gap-1 cursor-pointer"
                   >
-                    <CheckCheck className="w-3 h-3" />
-                    Clear
+                    <CheckCheck className="w-3.5 h-3.5" />
+                    Clear all
                   </button>
                 )}
               </div>
-              <div className="max-h-64 overflow-y-auto divide-y divide-[var(--border-color)]">
+              <div className="max-h-64 overflow-y-auto divide-y divide-[var(--border-subtle)]">
                 {notifications.length === 0 ? (
-                  <div className="p-6 text-center text-xs text-[var(--text-muted)]">No recent notifications.</div>
+                  <div className="p-6 text-center text-[12px] text-[var(--text-muted)]">
+                    No notifications yet.
+                  </div>
                 ) : (
                   notifications.map((n) => (
-                    <div key={n.id} className="px-3.5 py-2.5 hover:bg-[var(--hover-bg)]">
+                    <div key={n.id} className="px-4 py-2.5 hover:bg-[var(--surface-secondary)] transition-colors">
                       <div className="flex items-center justify-between gap-2">
                         <span
-                          className={`text-xs font-medium ${
-                            n.type === 'error'
-                              ? 'text-rose-500'
-                              : n.type === 'success'
-                              ? 'text-emerald-500'
-                              : 'text-[var(--text-primary)]'
-                          }`}
+                          style={{
+                            color:
+                              n.type === 'error'
+                                ? 'var(--semantic-error)'
+                                : n.type === 'success'
+                                  ? 'var(--semantic-success)'
+                                  : 'var(--text-primary)',
+                          }}
+                          className="text-[12.5px] font-medium"
                         >
                           {n.title}
                         </span>
-                        <span className="text-[10px] text-[var(--text-muted)]">{formatDate(n.timestamp)}</span>
+                        <span className="text-[11px] text-[var(--text-muted)] tabular-nums">
+                          {formatDate(n.timestamp)}
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[var(--text-secondary)] mt-0.5 truncate">{n.message}</p>
+                      <p className="text-[12px] text-[var(--text-secondary)] mt-0.5 truncate">{n.message}</p>
                     </div>
                   ))
                 )}
@@ -172,20 +196,22 @@ export function TopBar({
 
         {/* Theme Switcher */}
         <button
+          type="button"
           onClick={onToggleTheme}
-          aria-label="Toggle color theme"
-          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          className="h-9 w-9 rounded-lg border border-[var(--border-color)] bg-[var(--subtle-bg)] hover:bg-[var(--hover-bg)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+          aria-label={theme === 'dark' ? 'Switch to Light theme' : 'Switch to Dark theme'}
+          title={theme === 'dark' ? 'Switch to Light theme' : 'Switch to Dark theme'}
+          className="h-9 w-9 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-hover)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
         >
           {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
         {/* Settings Shortcut */}
         <button
+          type="button"
           onClick={onOpenSettings}
           aria-label="Open Settings"
           title="Settings"
-          className="h-9 w-9 rounded-lg border border-[var(--border-color)] bg-[var(--subtle-bg)] hover:bg-[var(--hover-bg)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+          className="h-9 w-9 rounded-lg border border-[var(--border-subtle)] bg-[var(--surface-secondary)] hover:bg-[var(--surface-hover)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]"
         >
           <Settings className="w-4 h-4" />
         </button>
@@ -193,4 +219,3 @@ export function TopBar({
     </header>
   );
 }
-

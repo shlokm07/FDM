@@ -12,6 +12,7 @@ package-lock.json
 desktop-app/bin/ui/
 desktop-app/bin/extension/
 desktop-app/bin/com.rea.idm.json
+desktop-app/bin/TERMS_OF_USE.txt
 
 # Runtime state, history & secrets
 *.idm-state.json
@@ -20,3 +21,4 @@ history.json
 .env.*
 *.key
 *.pem
+

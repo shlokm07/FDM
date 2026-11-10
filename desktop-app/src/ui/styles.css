@@ -1,35 +1,67 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2-variations");
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --app-bg: #f4f6f9;
-  --surface-bg: #ffffff;
-  --card-bg: #ffffff;
-  --subtle-bg: #eef1f5;
-  --hover-bg: #f1f5f9;
-  --border-color: #e2e8f0;
+  --app-bg: #f8fafc;
+  --surface-primary: #ffffff;
+  --surface-secondary: #f1f5f9;
+  --surface-hover: #e2e8f0;
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --accent: #059669;
-  --accent-hover: #047857;
-  --accent-soft: rgba(5, 150, 105, 0.12);
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --border-subtle: #e2e8f0;
+  --accent-primary: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: rgba(79, 70, 229, 0.1);
+  --accent-contrast: #ffffff;
+
+  --semantic-success: #16a34a;
+  --semantic-success-soft: rgba(22, 163, 74, 0.12);
+  --semantic-warning: #f59e0b;
+  --semantic-warning-soft: rgba(245, 158, 11, 0.14);
+  --semantic-error: #dc2626;
+  --semantic-error-soft: rgba(220, 38, 38, 0.12);
+  --semantic-info: #0ea5e9;
+  --semantic-info-soft: rgba(14, 165, 233, 0.12);
+
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-popover: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.06);
 }
 
 .dark {
-  --app-bg: #111317;
-  --surface-bg: #181b20;
-  --card-bg: #1d2128;
-  --subtle-bg: #232830;
-  --hover-bg: #272c35;
-  --border-color: #2b313c;
-  --text-primary: #f3f4f6;
+  --app-bg: #111827;
+  --surface-primary: #1f2937;
+  --surface-secondary: #242f40;
+  --surface-hover: #2d3a4e;
+  --text-primary: #f9fafb;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
-  --accent: #10b981;
-  --accent-hover: #059669;
-  --accent-soft: rgba(16, 185, 129, 0.14);
+  --border-subtle: #374151;
+  --accent-primary: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-soft: rgba(129, 140, 248, 0.14);
+  --accent-contrast: #0f172a;
+
+  --semantic-success: #16a34a;
+  --semantic-success-soft: rgba(22, 163, 74, 0.16);
+  --semantic-warning: #f59e0b;
+  --semantic-warning-soft: rgba(245, 158, 11, 0.16);
+  --semantic-error: #dc2626;
+  --semantic-error-soft: rgba(220, 38, 38, 0.18);
+  --semantic-info: #0ea5e9;
+  --semantic-info-soft: rgba(14, 165, 233, 0.16);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-popover: 0 16px 36px -6px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 html,
@@ -40,7 +72,9 @@ body,
   padding: 0;
   background-color: var(--app-bg);
   color: var(--text-primary);
-  font-family: "Segoe UI Variable", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", "Segoe UI Variable", "Segoe UI", sans-serif;
+  font-size: 13.5px;
+  line-height: 1.45;
   overflow: hidden;
 }
 
@@ -48,7 +82,32 @@ body,
   font-variant-numeric: tabular-nums;
 }
 
-/* Crisp Fluent Scrollbar */
+@keyframes rea-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-dialog-in {
+  animation: rea-dialog-in 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Refined Windows desktop scrollbars */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
@@ -59,10 +118,10 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.25);
+  background: rgba(100, 116, 139, 0.28);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.45);
+  background: rgba(100, 116, 139, 0.48);
 }
