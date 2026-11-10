@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>REA-IDM Companion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-shell">
+    <!-- Top Brand Bar -->
+    <header class="header">
+      <div class="brand-wrap">
+        <div class="logo-icon">↓</div>
+        <div>
+          <div class="brand-row">
+            <h2>REA-IDM</h2>
+            <span id="status-badge" class="badge offline">Offline</span>
+          </div>
+          <span id="speed-summary" class="subtext">Waiting for desktop engine...</span>
+        </div>
+      </div>
+      <button id="open-app-btn" class="btn-app" title="Launch or Focus REA-IDM Windows App">
+        Open App
+      </button>
+    </header>
+
+    <!-- Interactive Tabs -->
+    <nav class="tab-bar">
+      <button class="tab-btn active" data-tab="media">Page Media <span id="tab-media-cnt" class="cnt-pill">0</span></button>
+      <button class="tab-btn" data-tab="downloads">Downloads <span id="tab-dl-cnt" class="cnt-pill">0</span></button>
+      <button class="tab-btn" data-tab="add">Quick Add</button>
+    </nav>
+
+    <!-- Tab 1: Page Media -->
+    <section id="tab-media" class="tab-panel active">
+      <div class="filter-strip">
+        <div class="filter-chips">
+          <button class="chip active" data-filter="All">All</button>
+          <button class="chip" data-filter="Video">Video</button>
+          <button class="chip" data-filter="Audio">Audio</button>
+          <button class="chip" data-filter="Files">Files</button>
+        </div>
+        <button id="btn-rescan" class="icon-btn" title="Rescan current page">↻ Rescan</button>
+      </div>
+
+      <div id="media-list" class="scroll-list">
+        <div class="empty-state">Scanning active tab for videos and downloadable files...</div>
+      </div>
+
+      <div class="panel-footer">
+        <button id="btn-open-grabber" class="btn secondary-btn">Batch Grabber</button>
+        <button id="btn-download-all-media" class="btn primary-btn">Download Visible</button>
+      </div>
+    </section>
+
+    <!-- Tab 2: Live Downloads & History -->
+    <section id="tab-downloads" class="tab-panel">
+      <div id="downloads-list" class="scroll-list tall">
+        <div class="empty-state">No downloads recorded yet.</div>
+      </div>
+      <div class="panel-footer">
+        <button id="btn-open-dl-folder" class="btn secondary-btn">Open Downloads Folder</button>
+      </div>
+    </section>
+
+    <!-- Tab 3: Quick Add & Extension Rules -->
+    <section id="tab-add" class="tab-panel">
+      <div class="card">
+        <div class="card-title">Quick Add Download</div>
+        <input type="text" id="quick-url" placeholder="https://example.com/file.zip" />
+        <div class="quick-row">
+          <select id="quick-conns">
+            <option value="4">4 Threads</option>
+            <option value="8" selected>8 Threads</option>
+            <option value="16">16 Threads</option>
+            <option value="32">32 Threads</option>
+          </select>
+          <button id="btn-quick-start" class="btn primary-btn">Download Now</button>
+        </div>
+      </div>
+
+      <div class="card settings-card">
+        <div class="card-title">Browser Integration Rules</div>
+        <label class="toggle-row">
+          <span>Auto-Intercept Browser Downloads</span>
+          <input type="checkbox" id="toggle-interception" checked>
+        </label>
+        <label class="toggle-row">
+          <span>Floating Video Download Bar</span>
+          <input type="checkbox" id="toggle-sniffer" checked>
+        </label>
+        <div class="toggle-row">
+          <span>Ignore Small Files Below</span>
+          <select id="min-size-select">
+            <option value="0">Capture All</option>
+            <option value="100" selected>&gt; 100 KB</option>
+            <option value="1024">&gt; 1 MB</option>
+            <option value="5120">&gt; 5 MB</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

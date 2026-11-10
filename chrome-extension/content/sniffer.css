@@ -1,0 +1,402 @@
+/* REA-IDM Floating Video Bar & Batch Grabber — Obsidian & Emerald Mint Theme */
+.rea-idm-video-bar {
+  position: fixed;
+  z-index: 2147483647;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  user-select: none;
+  display: none;
+}
+
+.rea-idm-btn-main {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rea-idm-btn-main:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45);
+}
+
+.rea-idm-logo-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgba(17, 19, 23, 0.35);
+  font-size: 12px;
+}
+
+.rea-idm-count-badge {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #111317;
+  color: #34d399;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.rea-idm-chevron {
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+.rea-idm-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #181b20;
+  border: 1px solid #2e3440;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  width: 310px;
+  color: #f3f4f6;
+}
+
+.rea-idm-menu.hidden {
+  display: none;
+}
+
+.rea-idm-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px 8px;
+  border-bottom: 1px solid #2e3440;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.rea-idm-grab-all-btn {
+  background: #20242b;
+  color: #34d399;
+  border: 1px solid #2e3440;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rea-idm-grab-all-btn:hover {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.rea-idm-stream-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.rea-idm-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #20242b;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.rea-idm-menu-item:hover {
+  border-color: #10b981;
+  background: #262b34;
+}
+
+.rea-idm-item-info {
+  overflow: hidden;
+  flex: 1;
+}
+
+.rea-idm-item-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f3f4f6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rea-idm-item-meta {
+  font-size: 10.5px;
+  color: #34d399;
+  margin-top: 2px;
+}
+
+.rea-idm-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rea-idm-copy-btn {
+  background: #181b20;
+  border: 1px solid #2e3440;
+  color: #9ca3af;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.rea-idm-copy-btn:hover {
+  color: #ffffff;
+  border-color: #9ca3af;
+}
+
+.rea-idm-dl-pill {
+  background: #10b981;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+.rea-idm-empty-hint {
+  font-size: 11.5px;
+  color: #9ca3af;
+  padding: 12px 8px;
+  text-align: center;
+  line-height: 1.45;
+}
+
+/* Batch Grabber Modal */
+#rea-idm-batch-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 16, 0.72);
+  backdrop-filter: blur(4px);
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.rea-idm-modal {
+  width: 620px;
+  max-width: 92vw;
+  max-height: 82vh;
+  background: #181b20;
+  border: 1px solid #2e3440;
+  border-radius: 12px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  color: #f3f4f6;
+  overflow: hidden;
+}
+
+.rea-idm-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #111317;
+  border-bottom: 1px solid #2e3440;
+}
+
+.rea-idm-modal-head h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #f3f4f6;
+}
+
+.rea-idm-modal-head p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #34d399;
+}
+
+.rea-idm-modal-close {
+  background: #20242b;
+  color: #9ca3af;
+  border: 1px solid #2e3440;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.rea-idm-modal-filters {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #2e3440;
+}
+
+.rea-idm-modal-filters button {
+  background: #20242b;
+  color: #9ca3af;
+  border: 1px solid #2e3440;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rea-idm-modal-filters button.active {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+}
+
+.rea-idm-modal-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rea-idm-grab-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #20242b;
+  border: 1px solid #2e3440;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.rea-idm-grab-row:hover {
+  border-color: #10b981;
+}
+
+.rea-idm-ext-tag {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34d399;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 5px;
+  min-width: 38px;
+  text-align: center;
+}
+
+.rea-idm-grab-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.rea-idm-grab-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #f3f4f6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rea-idm-grab-url {
+  font-size: 10.5px;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rea-idm-grab-size {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.rea-idm-modal-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #111317;
+  border-top: 1px solid #2e3440;
+}
+
+.rea-idm-select-all {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.rea-idm-modal-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.rea-idm-btn-cancel {
+  background: #20242b;
+  color: #f3f4f6;
+  border: 1px solid #2e3440;
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rea-idm-btn-go {
+  background: #10b981;
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 7px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.rea-idm-btn-go:hover {
+  background: #059669;
+}
+
+.rea-idm-toast {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 2147483647;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+.rea-idm-toast.success {
+  background: #059669;
+  border: 1px solid #34d399;
+}
+
+.rea-idm-toast.error {
+  background: #be123c;
+  border: 1px solid #fb7185;
+}

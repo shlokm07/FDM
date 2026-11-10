@@ -1,0 +1,22 @@
+# Dependencies & Locks with local workspace links
+**/node_modules/
+package-lock.json
+
+# Build artifacts & compiled binaries
+*.exe
+*.dll
+*.blob
+*.log
+**/.build-temp/
+**/.webview2-sdk/
+desktop-app/bin/ui/
+desktop-app/bin/extension/
+desktop-app/bin/com.rea.idm.json
+
+# Runtime state, history & secrets
+*.idm-state.json
+history.json
+.env
+.env.*
+*.key
+*.pem
